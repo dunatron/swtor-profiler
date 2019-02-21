@@ -18,6 +18,6 @@
     - choose a name for your stage e.g "dev"
     - Note: this will then create two files `prisma.yml` & `datamodel.graphql` which both deserver there own write up below
 - `prisma.yml`: when it is firt created through the `prisma init` function it will look like this
-  - ````yml endpoint: https://us1.prisma.sh/heath-dunlop-37e897/swtor-profiler-api/dev
-    datamodel: datamodel.graphql ```
-    ````
+  - ```yml endpoint: https://us1.prisma.sh/heath-dunlop-37e897/swtor-profiler-api/dev
+    datamodel: datamodel.graphql
+    ```
