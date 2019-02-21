@@ -35,6 +35,32 @@
     [datamodel: datamodel.graphql](endpoint: https://us1.prisma.sh/heath-dunlop-37e897/swtor-profiler-api/dev
     datamodel: datamodel.graphql)
     ```
+- `datamodel.graphql`
+
+  ```graphql
+  type User {
+    id: ID! @unique
+    name: String!
+    email: String!
+  }
+
+  type File {
+    id: ID! @unique
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    filename: String!
+    mimetype: String!
+    encoding: String!
+    url: String! @unique
+  }
+
+  enum Permission {
+    ADMIN
+    USER
+    PERMISSIONUPDATE
+  }
+  ```
+
 - create a `variables.env` file
   - ```
     FRONTEND_URL="http://localhost:7777"
@@ -72,7 +98,7 @@
       prisma: prisma.yml
   ```
 
-- You could then run `yarn deploy` in this server directory which will deploy your api
+- You could then run `yarn run deploy` in this server directory which will deploy your api
   - It will create a new folder and file `src/generated/prisma.graphql`
 - Note: You will need to do0 the below steps all as 1
 - create a `src` directory and `index.js` file for the base of our server to run i.e run `touch src/index.js` in the server root
@@ -88,7 +114,6 @@
 
   const createServer = require("./createServer")
   const db = require("./db")
-  const { runAllJobs } = require("./cronjobs")
   const server = createServer()
 
   const expressLogger = function(req, res, next) {
@@ -170,10 +195,10 @@
   module.exports = db
   ```
 
-- You will then need to create a `Mutation` and `Query` file to use as our `createServer.js` file need then and is currently missing them.
+- You will then need to create resolvers for `Mutation` and `Query` file to use as our `createServer.js` file need then and is currently missing them.
 
   - create a resolvers folder
-  - `src/Qury.js`:
+  - `src/resolvers/Query.js`:
 
   ```js
   const { forwardTo } = require("prisma-binding")
@@ -186,7 +211,7 @@
   module.exports = Query)
   ```
 
-  - `Mutation.js`:
+  - `src/resolvers/Mutation.js`:
 
   ```js
   const { forwardTo } = require("prisma-binding")
@@ -272,12 +297,12 @@
   exports.hasPermission = hasPermission
   ```
 
-- WE should then create our `scheme.graphql` file which will be needed for our `createServer.js` file to now how to resolve our Querys and mutations.
+- WE should then create our `schema.graphql` file which will be needed for our `createServer.js` file to now how to resolve our Querys and mutations.
 
   - This file is also used to help auto-generate boiler plate CRUD functions with our `.graphqlconfig` file(see section)
   - `src/schema.graphql`
 
-  ```js
+  ````js
   # import * from './generated/prisma.graphql'
 
   type SuccessMessage {
@@ -307,4 +332,37 @@
     name: String!
   }
 
+  ```.
+
+  ````
+
+- `src/mail.js`
+
+  ```js
+  const nodemailer = require("nodemailer")
+
+  const transport = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
+    },
+  })
+
+  const makeANiceEmail = text => `
+    <div className="email" style="
+      border: 1px solid black;
+      padding: 20px;
+      font-family: sans-serif;
+      line-height: 2;
+      font-size: 20px;
+    ">
+      <h2>Hello There!</h2>
+      <p>${text}</p>
+      <p>😘, Tron</p>
+    </div>
+  `
+
+  exports.transport = transport
   ```

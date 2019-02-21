@@ -1,0 +1,36 @@
+type User {
+  id: ID! @unique
+  name: String!
+  email: String!
+  permissions: [Permission]
+}
+
+type File {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  filename: String!
+  mimetype: String!
+  encoding: String!
+  url: String! @unique
+}
+
+enum Permission {
+  ADMIN
+  USER
+  PERMISSIONUPDATE
+}
+
+type Character {
+  name: String!
+  class: CLASS! @default(value: "JEDI_KNIGHT")
+  level: Int! @default(value: "1")
+  advancedClass: ADVANCED_CLASS
+  abilitySlots: Json
+}
+
+type Guild {
+  id: ID! @unique
+  name: String @unique
+  members: [User!]!
+}
