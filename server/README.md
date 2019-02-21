@@ -1,6 +1,7 @@
 ## Setup
 
 - create `package.json` file with known packages:
+
   - dependencies : (yarn add or npm install)
     - graphql
     - graphql-cli
@@ -9,6 +10,18 @@
     - graphql-yog
   - custom packages:
     - (add here)
+  - Tou will also want to update your package.json file to use custom script so you can do things such as deploy your prisma server with a `variables.env` file
+
+  ```
+  "scripts": {
+    "start": "nodemon -e js,graphql -x node src/index.js",
+    "dev": "nodemon -e js,graphql -x node --inspect src/index.js",
+    "test": "jest",
+    "deploy": "prisma deploy --env-file variables.env",
+    "reset": "prisma reset --env-file variables.env"
+  },
+  ```
+
 - run `yarn` or npm `install` in root directory(server)
 - add the `prisma` package to global to run commands(note: add this to server too)
 - run `primsa init` in root directory(server) - You will have options of where to deploy.
@@ -42,7 +55,25 @@
       post-deploy:
         - graphql get-schema -p prisma
     ```
-- You could then run `prisma deploy` in this server directory which will deploy your api
+- As we are using `graphql-yoga` it is probably a good time to setup our `.graphqlconfig` file which will help us auto-generate a lot of boilerplate:
+
+  - `.graphqlconfig.yml`
+
+  ```yml
+  projects:
+  app:
+    schemaPath: "src/schema.graphql"
+    extensions:
+      endpoints:
+        default: "http://localhost:4444"
+  prisma:
+    schemaPath: "src/generated/prisma.graphql"
+    extensions:
+      prisma: prisma.yml
+  ```
+
+- You could then run `yarn deploy` in this server directory which will deploy your api
+  - It will create a new folder and file `src/generated/prisma.graphql`
 - Note: You will need to do0 the below steps all as 1
 - create a `src` directory and `index.js` file for the base of our server to run i.e run `touch src/index.js` in the server root
 
@@ -276,21 +307,4 @@
     name: String!
   }
 
-  ```
-
-- As we are using `graphql-yoga` it is probably a good time to setup our `.graphqlconfig` file which will help us auto-generate a lot of boilerplate:
-
-  - `.graphqlconfig`
-
-  ```yml
-  projects:
-  app:
-    schemaPath: "src/schema.graphql"
-    extensions:
-      endpoints:
-        default: "http://localhost:4444"
-  prisma:
-    schemaPath: "src/generated/prisma.graphql"
-    extensions:
-      prisma: prisma.yml
   ```
