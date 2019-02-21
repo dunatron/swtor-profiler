@@ -7,7 +7,7 @@ const { hasPermission } = require("../utils")
 
 const mutations = {
   async signup(parent, args, ctx, info) {
-    // lowercase their email
+    //lowercase their email
     args.email = args.email.toLowerCase()
     // hash their password
     const password = await bcrypt.hash(args.password, 10)

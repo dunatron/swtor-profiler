@@ -29,4 +29,7 @@ type Query {
 type User {
   id: ID!
   name: String!
+  email: String!
+  permissions: [Permission!]!
+  characters: [Character!]!
 }
