@@ -23,7 +23,8 @@
     datamodel: datamodel.graphql)
     ```
 - create a `variables.env` file
-  - ```FRONTEND_URL="http://localhost:7777"
+  - ```
+    FRONTEND_URL="http://localhost:7777"
     PRISMA_ENDPOINT="https://us1.prisma.sh/heath-dunlop-37e897/the-trader/dev"
     PRISMA_SECRET="th!sIsYoURDBPa$$WorD"
     APP_SECRET="jwtsecret123"
@@ -34,7 +35,8 @@
     CLOUDINARY_API_SECRET="CLUDINARY_API_SECRET_CHANGE"
     ```
 - You can the change your `prisma.yml` file to use your `variables.env file`
-  - ``` endpoint: ${env:PRISMA_ENDPOINT}
+  - ```
+    endpoint: ${env:PRISMA_ENDPOINT}
     datamodel: datamodel.graphql
     hooks:
       post-deploy:
