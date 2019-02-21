@@ -34,9 +34,9 @@
     CLOUDINARY_API_SECRET="CLUDINARY_API_SECRET_CHANGE"
     ```
 - You can the change your `prisma.yml` file to use your `variables.env file`
-  - ```endpoint: ${env:PRISMA_ENDPOINT}
+  - ``` endpoint: \${env:PRISMA_ENDPOINT}\
     datamodel: datamodel.graphql
     hooks:
       post-deploy:
-      - graphql get-schema -p prisma
-    ```
+        - graphql get-schema -p prisma
+    `
