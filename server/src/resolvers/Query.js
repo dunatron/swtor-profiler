@@ -4,6 +4,8 @@ const { hasPermission } = require("../utils")
 const Query = {
   me(parent, args, ctx, info) {
     // check if there is a current user ID
+    console.log("ctx => ", ctx)
+    console.log("args => ", args)
     if (!ctx.request.userId) {
       return null
     }

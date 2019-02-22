@@ -18,21 +18,18 @@ Router.onRouteChangeError = () => {
 }
 
 const Logo = styled.h1`
-  font-size: 3rem;
-  margin: 0 1rem;
+  font-size: 2rem;
+  margin: 0.5rem 1rem;
   position: relative;
   z-index: 2;
-  /* padding: 7px; */
-  transform: skew(-7deg);
   a {
-    border: 1px solid ${props => props.theme.palette.secondary.main};
-    border-radius: 0 25px 0 25px;
+    border: 3px solid ${props => props.theme.palette.secondary.main};
+    /* border-radius: 0 25px 0 25px; */
     padding: 0.5rem 1rem;
-    background: ${props => props.theme.palette.secondary.main};
-    color: ${props => props.theme.palette.secondary.contrastText};
+    background: ${props => props.theme.palette.primary.main};
+    color: ${props => props.theme.palette.secondary.main};
   }
   @media (max-width: ${props => props.theme.breakpoints.values.md}px) {
-    margin: 0 7px;
     text-align: center;
   }
 `
