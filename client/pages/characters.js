@@ -1,6 +1,21 @@
+import Button from "../components/styles/Button"
+import Router from "next/router"
+
+const handleLink = (route = "/", query = {}) => {
+  Router.push({
+    pathname: route,
+    query: query,
+  })
+}
+
 const CharactersPage = props => (
   <div>
-    <h1>A list of the users characters</h1>
+    <Button
+      onClick={() => handleLink("/create-character")}
+      color="primary"
+      variant="raised">
+      New Character
+    </Button>
   </div>
 )
 

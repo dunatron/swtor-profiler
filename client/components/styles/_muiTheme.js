@@ -30,5 +30,13 @@ const theme = {
       hint: "rgba(0, 0, 0, 0.38)",
     },
   },
+  form: {
+    fields: {
+      marginTop: "16px",
+      fontSize: "2rem",
+      minWidth: "120px",
+      maxWidth: "300px",
+    },
+  },
 }
 export default theme
