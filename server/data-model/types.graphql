@@ -26,9 +26,11 @@ enum Permission {
 }
 
 type Character {
+  id: ID! @unique
+  user: User
   name: String!
   class: CLASS! @default(value: "JEDI_KNIGHT")
-  level: Int! @default(value: "1")
+  level: Int @default(value: "1")
   advancedClass: ADVANCED_CLASS
   abilitySlots: Json
 }

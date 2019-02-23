@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import MaterialForm from "../styles/MaterialForm"
 import Button from "../styles/Button"
+import FieldSet from "../styles/FieldSet"
 import TextField from "@material-ui/core/TextField"
 import SelectInput from "../Inputs/SelectInput"
 import { CHARACTER_CLASSES, CHARACTER_SUB_CLASSES } from "../../constants"
@@ -9,10 +10,12 @@ import { Mutation } from "react-apollo"
 import gql from "graphql-tag"
 
 const CREATE_CHARACTER_MUTATION = gql`
-  mutation renameFile($id: ID!, $filename: String!) {
-    renameFile(id: $id, filename: $filename) {
+  mutation createCharacter($input: CharacterCreateInput) {
+    createCharacter(input: $input) {
       id
-      filename
+      name
+      class
+      advancedClass
     }
   }
 `
@@ -31,11 +34,17 @@ export default class CreateCharacter extends Component {
     return (
       <div>
         <Mutation
-          mutation={RENAME_FILE_MUTATION}
-          variables={{ id: this.props.id, filename: this.state.filename }}
+          mutation={CREATE_CHARACTER_MUTATION}
+          variables={{
+            input: {
+              name: name,
+              class: characterClass,
+              advancedClass: subClass,
+            },
+          }}
           // update={this.update}
         >
-          {(renameFile, { error }) => (
+          {(createCharacter, { error, loading }) => (
             <MaterialForm
               style={{
                 display: "flex",
@@ -46,50 +55,55 @@ export default class CreateCharacter extends Component {
               method="post"
               onSubmit={async e => {
                 e.preventDefault()
+                createCharacter()
                 alert("Form submitted")
               }}>
-              <TextField
-                name="name"
-                label="Character Name"
-                value={name}
-                onChange={this.saveToState}
-              />
-              <SelectInput
-                name="characterClass"
-                label="_Class"
-                value={characterClass}
-                options={CHARACTER_CLASSES.map(c => ({
-                  name: c.name,
-                  value: c.value,
-                  style: {
-                    color: c.allegiance === "REPUBLIC" ? "white" : "black",
-                    background: c.allegiance === "REPUBLIC" ? "blue" : "red",
-                  },
-                }))}
-                onChange={this.saveToState}
-              />
-              {characterClass && (
+              <FieldSet disabled={loading} aria-busy={loading}>
+                {loading ? "LOADING..." : null}
+                <TextField
+                  style={{ marginTop: 10 }}
+                  name="name"
+                  label="Character Name"
+                  value={name}
+                  onChange={this.saveToState}
+                />
                 <SelectInput
-                  name="subClass"
-                  label="__Sub Class"
-                  value={subClass}
-                  options={CHARACTER_SUB_CLASSES.filter(
-                    sc => sc.class === characterClass
-                  ).map(subClass => ({
-                    name: subClass.name,
-                    value: subClass.value,
+                  name="characterClass"
+                  label="_Class"
+                  value={characterClass}
+                  options={CHARACTER_CLASSES.map(c => ({
+                    name: c.name,
+                    value: c.value,
+                    style: {
+                      color: c.allegiance === "REPUBLIC" ? "white" : "black",
+                      background: c.allegiance === "REPUBLIC" ? "blue" : "red",
+                    },
                   }))}
                   onChange={this.saveToState}
                 />
-              )}
+                {characterClass && (
+                  <SelectInput
+                    name="subClass"
+                    label="__Sub Class"
+                    value={subClass}
+                    options={CHARACTER_SUB_CLASSES.filter(
+                      sc => sc.class === characterClass
+                    ).map(subClass => ({
+                      name: subClass.name,
+                      value: subClass.value,
+                    }))}
+                    onChange={this.saveToState}
+                  />
+                )}
 
-              <Button
-                type="submit"
-                color="primary"
-                variant="raised"
-                disabled={!this.canSubmit()}>
-                Create
-              </Button>
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="raised"
+                  disabled={!this.canSubmit() || loading}>
+                  Create
+                </Button>
+              </FieldSet>
             </MaterialForm>
           )}
         </Mutation>

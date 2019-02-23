@@ -154,6 +154,29 @@ const mutations = {
       info
     )
   },
+  async createCharacter(parent, args, ctx, info) {
+    const currentUser = await ctx.db.query.user(
+      {
+        where: {
+          id: ctx.request.userId,
+        },
+      },
+      info
+    )
+    const newCharacter = await ctx.db.mutation.createCharacter({
+      data: {
+        name: args.input.name,
+        class: args.input.class,
+        advancedClass: args.input.advancedClass,
+        user: {
+          connect: {
+            id: currentUser.id,
+          },
+        },
+      },
+    })
+    return newCharacter
+  },
 }
 
 module.exports = mutations

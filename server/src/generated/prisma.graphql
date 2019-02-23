@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/heath-dunlop-37e897/swtor-profiler-api/dev
-# timestamp: Fri Feb 22 2019 06:54:21 GMT+1300 (New Zealand Daylight Time)
+# timestamp: Sat Feb 23 2019 22:46:22 GMT+1300 (New Zealand Daylight Time)
 
 enum ADVANCED_CLASS {
   GUARDIAN
@@ -41,10 +41,12 @@ type BatchPayload {
   count: Long!
 }
 
-type Character {
+type Character implements Node {
+  id: ID!
+  user: User
   name: String!
   class: CLASS!
-  level: Int!
+  level: Int
   advancedClass: ADVANCED_CLASS
   abilitySlots: Json
 }
@@ -65,10 +67,20 @@ input CharacterCreateInput {
   level: Int
   advancedClass: ADVANCED_CLASS
   abilitySlots: Json
+  user: UserCreateOneWithoutCharactersInput
 }
 
-input CharacterCreateManyInput {
-  create: [CharacterCreateInput!]
+input CharacterCreateManyWithoutUserInput {
+  create: [CharacterCreateWithoutUserInput!]
+  connect: [CharacterWhereUniqueInput!]
+}
+
+input CharacterCreateWithoutUserInput {
+  name: String!
+  class: CLASS
+  level: Int
+  advancedClass: ADVANCED_CLASS
+  abilitySlots: Json
 }
 
 """An edge in a connection."""
@@ -81,6 +93,8 @@ type CharacterEdge {
 }
 
 enum CharacterOrderByInput {
+  id_ASC
+  id_DESC
   name_ASC
   name_DESC
   class_ASC
@@ -91,8 +105,6 @@ enum CharacterOrderByInput {
   advancedClass_DESC
   abilitySlots_ASC
   abilitySlots_DESC
-  id_ASC
-  id_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -100,9 +112,10 @@ enum CharacterOrderByInput {
 }
 
 type CharacterPreviousValues {
+  id: ID!
   name: String!
   class: CLASS!
-  level: Int!
+  level: Int
   advancedClass: ADVANCED_CLASS
   abilitySlots: Json
 }
@@ -116,6 +129,46 @@ input CharacterScalarWhereInput {
 
   """Logical NOT on all given filters combined by AND."""
   NOT: [CharacterScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
   name: String
 
   """All values that are not equal to given value."""
@@ -239,18 +292,21 @@ input CharacterSubscriptionWhereInput {
   node: CharacterWhereInput
 }
 
+input CharacterUpdateInput {
+  name: String
+  class: CLASS
+  level: Int
+  advancedClass: ADVANCED_CLASS
+  abilitySlots: Json
+  user: UserUpdateOneWithoutCharactersInput
+}
+
 input CharacterUpdateManyDataInput {
   name: String
   class: CLASS
   level: Int
   advancedClass: ADVANCED_CLASS
   abilitySlots: Json
-}
-
-input CharacterUpdateManyInput {
-  create: [CharacterCreateInput!]
-  updateMany: [CharacterUpdateManyWithWhereNestedInput!]
-  deleteMany: [CharacterScalarWhereInput!]
 }
 
 input CharacterUpdateManyMutationInput {
@@ -261,9 +317,40 @@ input CharacterUpdateManyMutationInput {
   abilitySlots: Json
 }
 
+input CharacterUpdateManyWithoutUserInput {
+  create: [CharacterCreateWithoutUserInput!]
+  connect: [CharacterWhereUniqueInput!]
+  set: [CharacterWhereUniqueInput!]
+  disconnect: [CharacterWhereUniqueInput!]
+  delete: [CharacterWhereUniqueInput!]
+  update: [CharacterUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [CharacterUpdateManyWithWhereNestedInput!]
+  deleteMany: [CharacterScalarWhereInput!]
+  upsert: [CharacterUpsertWithWhereUniqueWithoutUserInput!]
+}
+
 input CharacterUpdateManyWithWhereNestedInput {
   where: CharacterScalarWhereInput!
   data: CharacterUpdateManyDataInput!
+}
+
+input CharacterUpdateWithoutUserDataInput {
+  name: String
+  class: CLASS
+  level: Int
+  advancedClass: ADVANCED_CLASS
+  abilitySlots: Json
+}
+
+input CharacterUpdateWithWhereUniqueWithoutUserInput {
+  where: CharacterWhereUniqueInput!
+  data: CharacterUpdateWithoutUserDataInput!
+}
+
+input CharacterUpsertWithWhereUniqueWithoutUserInput {
+  where: CharacterWhereUniqueInput!
+  update: CharacterUpdateWithoutUserDataInput!
+  create: CharacterCreateWithoutUserInput!
 }
 
 input CharacterWhereInput {
@@ -275,6 +362,46 @@ input CharacterWhereInput {
 
   """Logical NOT on all given filters combined by AND."""
   NOT: [CharacterWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
   name: String
 
   """All values that are not equal to given value."""
@@ -357,6 +484,11 @@ input CharacterWhereInput {
 
   """All values that are not contained in given list."""
   advancedClass_not_in: [ADVANCED_CLASS!]
+  user: UserWhereInput
+}
+
+input CharacterWhereUniqueInput {
+  id: ID
 }
 
 enum CLASS {
@@ -952,25 +1084,28 @@ scalar Long
 
 type Mutation {
   createFile(data: FileCreateInput!): File!
-  createGuild(data: GuildCreateInput!): Guild!
   createCharacter(data: CharacterCreateInput!): Character!
+  createGuild(data: GuildCreateInput!): Guild!
   createUser(data: UserCreateInput!): User!
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
+  updateCharacter(data: CharacterUpdateInput!, where: CharacterWhereUniqueInput!): Character
   updateGuild(data: GuildUpdateInput!, where: GuildWhereUniqueInput!): Guild
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteFile(where: FileWhereUniqueInput!): File
+  deleteCharacter(where: CharacterWhereUniqueInput!): Character
   deleteGuild(where: GuildWhereUniqueInput!): Guild
   deleteUser(where: UserWhereUniqueInput!): User
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
+  upsertCharacter(where: CharacterWhereUniqueInput!, create: CharacterCreateInput!, update: CharacterUpdateInput!): Character!
   upsertGuild(where: GuildWhereUniqueInput!, create: GuildCreateInput!, update: GuildUpdateInput!): Guild!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
-  updateManyGuilds(data: GuildUpdateManyMutationInput!, where: GuildWhereInput): BatchPayload!
   updateManyCharacters(data: CharacterUpdateManyMutationInput!, where: CharacterWhereInput): BatchPayload!
+  updateManyGuilds(data: GuildUpdateManyMutationInput!, where: GuildWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
-  deleteManyGuilds(where: GuildWhereInput): BatchPayload!
   deleteManyCharacters(where: CharacterWhereInput): BatchPayload!
+  deleteManyGuilds(where: GuildWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
@@ -1009,15 +1144,16 @@ enum Permission {
 
 type Query {
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
-  guilds(where: GuildWhereInput, orderBy: GuildOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Guild]!
   characters(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Character]!
+  guilds(where: GuildWhereInput, orderBy: GuildOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Guild]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   file(where: FileWhereUniqueInput!): File
+  character(where: CharacterWhereUniqueInput!): Character
   guild(where: GuildWhereUniqueInput!): Guild
   user(where: UserWhereUniqueInput!): User
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
-  guildsConnection(where: GuildWhereInput, orderBy: GuildOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GuildConnection!
   charactersConnection(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CharacterConnection!
+  guildsConnection(where: GuildWhereInput, orderBy: GuildOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GuildConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
@@ -1029,8 +1165,8 @@ type Query {
 
 type Subscription {
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
-  guild(where: GuildSubscriptionWhereInput): GuildSubscriptionPayload
   character(where: CharacterSubscriptionWhereInput): CharacterSubscriptionPayload
+  guild(where: GuildSubscriptionWhereInput): GuildSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -1062,7 +1198,7 @@ input UserCreateInput {
   resetToken: String
   resetTokenExpiry: Float
   permissions: UserCreatepermissionsInput
-  characters: CharacterCreateManyInput
+  characters: CharacterCreateManyWithoutUserInput
 }
 
 input UserCreateManyInput {
@@ -1070,8 +1206,22 @@ input UserCreateManyInput {
   connect: [UserWhereUniqueInput!]
 }
 
+input UserCreateOneWithoutCharactersInput {
+  create: UserCreateWithoutCharactersInput
+  connect: UserWhereUniqueInput
+}
+
 input UserCreatepermissionsInput {
   set: [Permission!]
+}
+
+input UserCreateWithoutCharactersInput {
+  name: String!
+  email: String!
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: UserCreatepermissionsInput
 }
 
 """An edge in a connection."""
@@ -1391,7 +1541,7 @@ input UserUpdateDataInput {
   resetToken: String
   resetTokenExpiry: Float
   permissions: UserUpdatepermissionsInput
-  characters: CharacterUpdateManyInput
+  characters: CharacterUpdateManyWithoutUserInput
 }
 
 input UserUpdateInput {
@@ -1401,7 +1551,7 @@ input UserUpdateInput {
   resetToken: String
   resetTokenExpiry: Float
   permissions: UserUpdatepermissionsInput
-  characters: CharacterUpdateManyInput
+  characters: CharacterUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyDataInput {
@@ -1439,13 +1589,36 @@ input UserUpdateManyWithWhereNestedInput {
   data: UserUpdateManyDataInput!
 }
 
+input UserUpdateOneWithoutCharactersInput {
+  create: UserCreateWithoutCharactersInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: UserUpdateWithoutCharactersDataInput
+  upsert: UserUpsertWithoutCharactersInput
+}
+
 input UserUpdatepermissionsInput {
   set: [Permission!]
+}
+
+input UserUpdateWithoutCharactersDataInput {
+  name: String
+  email: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: UserUpdatepermissionsInput
 }
 
 input UserUpdateWithWhereUniqueNestedInput {
   where: UserWhereUniqueInput!
   data: UserUpdateDataInput!
+}
+
+input UserUpsertWithoutCharactersInput {
+  update: UserUpdateWithoutCharactersDataInput!
+  create: UserCreateWithoutCharactersInput!
 }
 
 input UserUpsertWithWhereUniqueNestedInput {
